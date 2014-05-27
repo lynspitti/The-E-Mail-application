@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="The_E_Mail_application.MailUser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="300">
+    <TreeView Name="HeadUser">
+        <TreeViewItem Header="User:" Name="User">
+            <TreeViewItem Header="Inbox">
+                
+            </TreeViewItem>
+            <TreeViewItem Header="Uønsket mail">
+                
+            </TreeViewItem>
+            <TreeViewItem Header="Sendt">
+                
+            </TreeViewItem>
+            <TreeViewItem Header="Slettet">
+                
+            </TreeViewItem>
+            <Button Content="Ny mappe" FontSize="13" Background="Transparent" BorderBrush="Transparent" Margin="-4,0,0,0"/>
+        </TreeViewItem>
+    </TreeView>
+</UserControl>
