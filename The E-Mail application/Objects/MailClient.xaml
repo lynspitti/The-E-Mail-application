@@ -1,22 +1,22 @@
-﻿<UserControl x:Class="The_E_Mail_application.MailUser"
+﻿<UserControl x:Class="The_E_Mail_application.MailClient"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="300">
-    <TreeView Name="HeadUser">
+             mc:Ignorable="d" Margin="0,10,0,0"
+             d:DesignHeight="110" d:DesignWidth="300">
+    <TreeView Name="HeadUser" Loaded="Window_Loaded">
         <TreeViewItem Header="User:" Name="User">
-            <TreeViewItem Header="Inbox">
+            <TreeViewItem Header="Inbox" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
                 
             </TreeViewItem>
-            <TreeViewItem Header="Uønsket mail">
+            <TreeViewItem Header="Uønsket mail" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
                 
             </TreeViewItem>
-            <TreeViewItem Header="Sendt">
+            <TreeViewItem Header="Sendt" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
                 
             </TreeViewItem>
-            <TreeViewItem Header="Slettet">
+            <TreeViewItem Header="Slettet" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
                 
             </TreeViewItem>
             <Button Content="Ny mappe" FontSize="13" Background="Transparent" BorderBrush="Transparent" Margin="-4,0,0,0"/>
