@@ -25,10 +25,9 @@ namespace The_E_Mail_application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Users {
+        public global::System.Collections.Specialized.StringCollection Users {
             get {
-                return ((string)(this["Users"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Users"]));
             }
             set {
                 this["Users"] = value;
@@ -37,10 +36,9 @@ namespace The_E_Mail_application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
+        public global::System.Collections.Specialized.StringCollection Password {
             get {
-                return ((string)(this["Password"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Password"]));
             }
             set {
                 this["Password"] = value;
@@ -49,10 +47,9 @@ namespace The_E_Mail_application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Pop3 {
+        public global::System.Collections.Specialized.StringCollection Pop3 {
             get {
-                return ((string)(this["Pop3"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Pop3"]));
             }
             set {
                 this["Pop3"] = value;
@@ -61,25 +58,56 @@ namespace The_E_Mail_application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("110")]
-        public int Port {
+        public global::System.Collections.Specialized.StringCollection PPort {
             get {
-                return ((int)(this["Port"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["PPort"]));
             }
             set {
-                this["Port"] = value;
+                this["PPort"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseSsl {
+        public global::System.Collections.Specialized.StringCollection UseSsl {
             get {
-                return ((bool)(this["UseSsl"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["UseSsl"]));
             }
             set {
                 this["UseSsl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection Smtp {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Smtp"]));
+            }
+            set {
+                this["Smtp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection SPort {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["SPort"]));
+            }
+            set {
+                this["SPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection UseTls {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["UseTls"]));
+            }
+            set {
+                this["UseTls"] = value;
             }
         }
     }

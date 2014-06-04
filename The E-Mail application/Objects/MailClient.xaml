@@ -5,21 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Margin="0,10,0,0"
              d:DesignHeight="110" d:DesignWidth="300">
-    <TreeView Name="HeadUser" Loaded="Window_Loaded">
-        <TreeViewItem Header="User:" Name="User">
-            <TreeViewItem Header="Inbox" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
-                
+    <Grid>
+        <TreeView Name="HeadUser" Loaded="Window_Loaded">
+            <TreeView.ContextMenu>
+                <ContextMenu StaysOpen="true">
+                    <MenuItem Header="Edit" Click="EditClient_Clicked"/>
+                    <MenuItem Header="Delete" Click="DeleteClient_Clicked"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+            <TreeViewItem Header="User:" Name="User">
+                <TreeViewItem Header="Inbox" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
+                    
+                </TreeViewItem>
+                <TreeViewItem Header="Uønsket mail" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
+
+                </TreeViewItem>
+                <TreeViewItem Header="Sendt" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
+
+                </TreeViewItem>
+                <TreeViewItem Header="Slettet" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
+
+                </TreeViewItem>
+                <Button Content="Ny mappe" FontSize="13" Background="Transparent" BorderBrush="Transparent" Margin="-4,0,0,0"/>
             </TreeViewItem>
-            <TreeViewItem Header="Uønsket mail" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
-                
-            </TreeViewItem>
-            <TreeViewItem Header="Sendt" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
-                
-            </TreeViewItem>
-            <TreeViewItem Header="Slettet" Selected="MailListMap_Selected" MouseEnter="Mouseover" MouseLeave="Mouseleave" >
-                
-            </TreeViewItem>
-            <Button Content="Ny mappe" FontSize="13" Background="Transparent" BorderBrush="Transparent" Margin="-4,0,0,0"/>
-        </TreeViewItem>
-    </TreeView>
+        </TreeView>
+    </Grid>
 </UserControl>

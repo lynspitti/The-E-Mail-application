@@ -20,11 +20,13 @@ namespace The_E_Mail_application
     /// </summary>
     public partial class MailItem : UserControl
     {
+        #region DependencyPropertys
         private static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(string), typeof(MailItem), new UIPropertyMetadata(""));
         private static readonly DependencyProperty SubjectProperty = DependencyProperty.Register("Subject", typeof(string), typeof(MailItem), new UIPropertyMetadata(""));
         private static readonly DependencyProperty DateProperty = DependencyProperty.Register("Date", typeof(string), typeof(MailItem), new UIPropertyMetadata(""));
         private static readonly DependencyProperty MessageIdProperty = DependencyProperty.Register("MessageId", typeof(string), typeof(MailItem), new UIPropertyMetadata(""));
         private static readonly DependencyProperty IsMarkedProperty = DependencyProperty.Register("IsMarked", typeof(bool), typeof(MailItem), new UIPropertyMetadata(false));
+        #endregion
 
         public string From
         {
@@ -58,6 +60,10 @@ namespace The_E_Mail_application
             this.DataContext = this;
         }
 
+        /// <summary>
+        /// Mail in list have been clicked
+        /// view mail
+        /// </summary>
         private void MailClicked(object sender, MouseButtonEventArgs e)
         {
             foreach (MailClient client in ((MainWindow)Window.GetWindow(this)).ClientPanel.Children) 
@@ -71,6 +77,7 @@ namespace The_E_Mail_application
             }
         }
 
+        #region pretty functions
         private void Mouseover(object sender, MouseEventArgs e)
         {
             this.Background = Brushes.AliceBlue;
@@ -80,5 +87,6 @@ namespace The_E_Mail_application
         {
             this.Background = Brushes.Transparent;
         }
+        #endregion
     }
 }

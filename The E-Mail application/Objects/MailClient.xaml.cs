@@ -28,39 +28,44 @@ namespace The_E_Mail_application
     /// </summary>
     public partial class MailClient : UserControl
     {
-        public string Client_Mail;
-        string Password;
-        string Pop3 = "mail.renennielsen.dk";
-        int Port = 110;
-        bool UseSsl = true;
-
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
         Pop3Client client;
         public bool IsConnected = false;
+        public string UserEmail = "";
+
+        int SettingsIndex = 0;
         /// <summary>
         /// Contains a User´s pop3 information
         /// and Mail contact
         /// </summary>
-        /// <param name="E_Mail">Users E-Mail</param>
-        /// <param name="password">Users Password</param>
-        /// <param name="pop3">Pop3 server address</param>
-        /// <param name="port">Pop3 port</param>
-        /// <param name="usessl">How ever or not to use Ssl</param>
-        public MailClient(string E_Mail, string password, string pop3, int port, bool usessl)
+        /// <param name="Settings_Index">Index used to get Client information</param>
+        public MailClient(int Settings_Index)
         {
-            Client_Mail = E_Mail;
-            Password = password;
-            Pop3 = pop3;
-            Port = port;
-            UseSsl = usessl;
+            SettingsIndex = Settings_Index;
             InitializeComponent();
-            User.Header = Client_Mail;
+            UserEmail = Properties.Settings.Default.Users.Cast<string>().ToArray<string>()[SettingsIndex];
+            User.Header = UserEmail;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             IsConnected = Connect();
         }
+
+        #region Pretty funcktions
+        private void Mouseover(object sender, MouseEventArgs e)
+        {
+            TreeViewItem Sender = (TreeViewItem)sender;
+            Sender.Background = Brushes.AliceBlue;
+        }
+
+        private void Mouseleave(object sender, MouseEventArgs e)
+        {
+            TreeViewItem Sender = (TreeViewItem)sender;
+            Sender.Background = Brushes.Transparent;
+        }
+        #endregion
+
         /// <summary>
         /// Used to connect client to server.
         /// </summary>
@@ -69,11 +74,21 @@ namespace The_E_Mail_application
             client = new Pop3Client();
             try
             {
-                client.Connect(Pop3, Port, UseSsl);
+                // connect pop3 server, pop3 port, use ssl
+                client.Connect(Properties.Settings.Default.Pop3.Cast<string>().ToArray<string>()[SettingsIndex], 
+                    Convert.ToInt32(Properties.Settings.Default.PPort.Cast<string>().ToArray<string>()[SettingsIndex]), 
+                    Convert.ToBoolean(Properties.Settings.Default.UseSsl.Cast<string>().ToArray<string>()[SettingsIndex])
+                );
                 try
                 {
-                    client.Authenticate(Client_Mail.ToString(), Password.ToString(), AuthenticationMethod.Auto);
+                    // authenticate user, password, methode
+                    client.Authenticate(UserEmail,
+                        Symmetric_Encryption.DecryptString(Properties.Settings.Default.Password.Cast<string>().ToArray<string>()[SettingsIndex]), 
+                        AuthenticationMethod.Auto
+                    );
                     client.NoOperation();
+
+                    // Start NoOperation every 100 milisec
                     ThreadStart processTaskThread = delegate
                     {
                         dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
@@ -118,7 +133,7 @@ namespace The_E_Mail_application
         {
             if (IsConnected)
             {
-                dispatcherTimer.Stop();
+                this.dispatcherTimer.Stop();
                 Thread.Sleep(0500);
                 try{
                     int messageCount = client.GetMessageCount();
@@ -127,22 +142,27 @@ namespace The_E_Mail_application
                     {
                         MessageHeader headers = client.GetMessageHeaders(i);
                         RfcMailAddress from = headers.From;
+
+                        //Check on Spam
+                        if (String.IsNullOrEmpty(headers.MessageId)) continue;
+
                         string[] Mail = new string[4];
                         Mail[0] = headers.MessageId;
                         if (!String.IsNullOrEmpty(from.DisplayName)) Mail[1] = from.DisplayName;
                         else Mail[1] = from.Address;
-                        Mail[2] = headers.DateSent.Day.ToString("D2") + "/" + headers.DateSent.Month.ToString("D2") + " " + headers.DateSent.Year.ToString("D4") + " " + headers.DateSent.Hour.ToString("D2") + ":" + headers.DateSent.Minute.ToString("D2") + ":" + headers.DateSent.Second.ToString("D2");
+                        Mail[2] = headers.DateSent.Year.ToString("D4") + " " + headers.DateSent.Month.ToString("D2") + "/" + headers.DateSent.Day.ToString("D2") + " " + headers.DateSent.Hour.ToString("D2") + ":" + headers.DateSent.Minute.ToString("D2") + ":" + headers.DateSent.Second.ToString("D2");
                         Mail[3] = headers.Subject;
                         All_Mails[messageCount - i] = Mail;
                     }
+                    this.dispatcherTimer.Start();
                     return All_Mails;
                 }
                 catch {
                     // mail receiving error
                     MessageBox.Show("Mail receiving error.", "error");
                 }
-                dispatcherTimer.Start();
             }
+            this.dispatcherTimer.Start();
             return null;
         }
 
@@ -188,6 +208,13 @@ namespace The_E_Mail_application
             return "";
         }
 
+        #region Ui functions
+        /// <summary>
+        /// Send E-Mail
+        /// </summary>
+        /// <param name="reciverMail">Mail that recives mail</param>
+        /// <param name="subject">Mail subject</param>
+        /// <param name="textBody">Mail context</param>
         public void sendEmail(string reciverMail, string subject, string textBody)
         {
             SmtpClient c = new SmtpClient(@"smtp.live.com", 25);
@@ -211,35 +238,24 @@ namespace The_E_Mail_application
             }
         }
 
-        private void Mouseover(object sender, MouseEventArgs e)
-        {
-            TreeViewItem Sender = (TreeViewItem)sender;
-            Sender.Background = Brushes.AliceBlue;
-        }
-
-        private void Mouseleave(object sender, MouseEventArgs e)
-        {
-            TreeViewItem Sender = (TreeViewItem)sender;
-            Sender.Background = Brushes.Transparent;
-        }
-
         /// <summary>
         /// A Client folder have been selected
         /// </summary>
         public void MailListMap_Selected(object sender, RoutedEventArgs e)
         {
             if (!IsConnected) return;
+            ((MainWindow)Window.GetWindow(this)).MailList.Children.Clear();
             SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
             m_dbConnection.Open();
 
             TreeViewItem Sender = (TreeViewItem)sender;
             if (Sender == null) return;
-            SQLiteCommand sqlComm = new SQLiteCommand("SELECT * FROM MailList WHERE Receiver = '" + Client_Mail + "' AND Container = '" + Sender.Header.ToString() + "'", m_dbConnection);
+            // get all mails in database " from client / user, under folder name
+            SQLiteCommand sqlComm = new SQLiteCommand("SELECT * FROM MailList WHERE Receiver = '" + UserEmail + "' AND Container = '" + Sender.Header.ToString() + "' ORDER BY Date DESC", m_dbConnection);
             SQLiteDataReader r = sqlComm.ExecuteReader();
             while (r.Read())
             {
                 MailItem NewMail = new MailItem();
-
                 NewMail.Subject = (string)r["Subject"];
                 NewMail.Date = (string)r["Date"];
                 NewMail.From = (string)r["Sender"];
@@ -248,5 +264,53 @@ namespace The_E_Mail_application
             }
             m_dbConnection.Close();
         }
+
+        /// <summary>
+        /// Edit menu have been clicked
+        /// </summary>
+        private void EditClient_Clicked(object sender, RoutedEventArgs e)
+        {
+            string[] qustions = { "E-Mail Address:", "Password:", "Pop3-Server:", "Pop3-Port:", "Use Ssl:", "Smtp-Server", "Smtp-Port:", "Use Tls:" };
+            string[] Answers = { UserEmail, Symmetric_Encryption.DecryptString(Properties.Settings.Default.Password.Cast<string>().ToArray<string>()[SettingsIndex]), Properties.Settings.Default.Pop3.Cast<string>().ToArray<string>()[SettingsIndex],Properties.Settings.Default.PPort.Cast<string>().ToArray<string>()[SettingsIndex] ,
+                               Properties.Settings.Default.UseSsl.Cast<string>().ToArray<string>()[SettingsIndex], Properties.Settings.Default.Smtp.Cast<string>().ToArray<string>()[SettingsIndex], Properties.Settings.Default.SPort.Cast<string>().ToArray<string>()[SettingsIndex], Properties.Settings.Default.UseTls.Cast<string>().ToArray<string>()[SettingsIndex]
+            };
+            NewClient Msr = new NewClient(qustions, Answers);
+
+            if (Msr.ShowDialog() == true)
+            {
+                #region Save / add new client in properties
+                Properties.Settings.Default.Users.Add(Msr.Answers[0]);
+                Properties.Settings.Default.Password.Add(Symmetric_Encryption.EncryptString(Msr.Answers[1]));
+                Properties.Settings.Default.Pop3.Add(Msr.Answers[2]);
+                Properties.Settings.Default.PPort.Add(Msr.Answers[3]);
+                Properties.Settings.Default.UseSsl.Add(Msr.Answers[4]);
+                Properties.Settings.Default.Smtp.Add(Msr.Answers[5]);
+                Properties.Settings.Default.SPort.Add(Msr.Answers[6]);
+                Properties.Settings.Default.UseTls.Add(Msr.Answers[7]);
+                Properties.Settings.Default.Save();
+                #endregion
+            }
+            //Reload Client Panel
+            DeleteClient_Clicked(null, new RoutedEventArgs());
+            ((MainWindow)Window.GetWindow(this)).Load_Clients();
+        }
+
+        /// <summary>
+        /// Delete menu have been clicked
+        /// </summary>
+        private void DeleteClient_Clicked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.Users.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.Password.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.Pop3.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.PPort.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.UseSsl.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.Smtp.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.SPort.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.UseTls.RemoveAt(SettingsIndex);
+            Properties.Settings.Default.Save();
+            ((MainWindow)Window.GetWindow(this)).ClientPanel.Children.Remove(this);
+        }
+        #endregion
     }
 }

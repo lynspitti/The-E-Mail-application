@@ -21,6 +21,7 @@ namespace The_E_Mail_application
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
         BackgroundWorker Loader = new BackgroundWorker();
         MainWindow Main_Window;
+        SQLiteConnection m_dbConnection;
 
         /// <summary>
         /// Creats background threads
@@ -34,19 +35,24 @@ namespace The_E_Mail_application
 
             Loader = new BackgroundWorker();
             Loader.DoWork += new DoWorkEventHandler(Loader_DoWork);
-            Loader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Loader_RunWorkerCompleted);
             
             Create_JoinDatabase();
             
             dispatcherTimer.Start();
         }
         
+        /// <summary>
+        /// Timer to update has trickered
+        /// </summary>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             while (Loader.IsBusy || Loads > 0) { }
             Loader.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// Update All clients mail list
+        /// </summary>
         private void Loader_DoWork(object sender, DoWorkEventArgs e)
         {
             dispatcherTimer.Stop();
@@ -55,10 +61,10 @@ namespace The_E_Mail_application
                 {
                     if (obj is MailClient)
                     {
+                        // start client update
                         MailClient client = obj as MailClient;
                         ThreadStart processTaskThread = delegate { Load_Mails(client); };
                         Thread thread = new Thread(processTaskThread);
-                        thread.SetApartmentState(ApartmentState.STA);
                         thread.Start();
                     }
                 }
@@ -67,6 +73,9 @@ namespace The_E_Mail_application
             dispatcherTimer.Start();
         }
 
+        /// <summary>
+        /// Load mails from specefic client
+        /// </summary>
         int Loads = 0;
         private void Load_Mails(MailClient client)
         {
@@ -78,7 +87,9 @@ namespace The_E_Mail_application
                 m_dbConnection.Open();
                 foreach (string[] Mail in Mails)
                 {
-                    SQLiteCommand insertSQL = new SQLiteCommand("INSERT INTO MailList (MessageId, Receiver, Sender, Date, Subject, Container) VALUES ('" + Mail[0] + "','" + client.Client_Mail + "','" + Mail[1] + "','" + Mail[2] + "','" + Mail[3] + "','Inbox')", m_dbConnection);
+                    if (Mail == null) continue;
+                    // insert new mails into database
+                    SQLiteCommand insertSQL = new SQLiteCommand("INSERT INTO MailList (MessageId, Receiver, Sender, Date, Subject, Container) VALUES ('" + Mail[0] + "','" + client.UserEmail + "','" + Mail[1] + "','" + Mail[2] + "','" + Mail[3] + "','Inbox')", m_dbConnection);
                     try
                     {
                         insertSQL.ExecuteNonQuery();
@@ -88,37 +99,31 @@ namespace The_E_Mail_application
                 }
                 m_dbConnection.Close();
             }
-            App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-            {
+
+            App.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate(){
                 client.MailListMap_Selected(client.HeadUser.SelectedItem, new RoutedEventArgs());
             }));
             Loads--;
         }
 
-        private void Loader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            // Handle the System.Exception
-            if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.Message);
-            }
-            // Operation succeeded
-            else
-            {
-                
-            }
-        }
-
-        SQLiteConnection m_dbConnection;
+        /// <summary>
+        /// Create database / table if not existing
+        /// else open connection
+        /// </summary>
         private void Create_JoinDatabase()
         {
+            #region create non existing database
             if (!System.IO.File.Exists("MyDatabase.sqlite"))
             {
                 SQLiteConnection.CreateFile("MyDatabase.sqlite");
             }
+            #endregion
+
+            // open connection
             m_dbConnection = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
             m_dbConnection.Open();
 
+            #region create non existing table
             bool exists = false;
             DataTable dt = m_dbConnection.GetSchema("Tables");
             foreach (DataRow row in dt.Rows)
@@ -133,10 +138,7 @@ namespace The_E_Mail_application
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
             }
-
-            //sql = "insert into highscores (name, score) values ('Me', 9001)";
-            //command = new SQLiteCommand(sql, m_dbConnection);
-            //command.ExecuteNonQuery();
+            #endregion
 
             m_dbConnection.Close();
         }

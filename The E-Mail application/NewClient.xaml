@@ -1,7 +1,7 @@
 ﻿<Window x:Class="The_E_Mail_application.NewClient"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NewClient" MaxHeight="220" SizeToContent="WidthAndHeight" ResizeMode="NoResize" MinHeight="120" MaxWidth="300" MinWidth="300" Icon="Lynspitti.ico">
+        Title="NewClient" MaxHeight="270" SizeToContent="WidthAndHeight" ResizeMode="NoResize" MinHeight="120" MaxWidth="300" MinWidth="300" Icon="Lynspitti.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -19,20 +19,29 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="22"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <TextBlock Name="Question1" Grid.Column="1" Grid.Row="2" Visibility="Collapsed"/>
-        <TextBox Name="Answer1" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="2" Visibility="Collapsed"/>
-        <TextBlock Name="Question2" Grid.Column="1" Grid.Row="3" Visibility="Collapsed"/>
-        <PasswordBox Name="Answer2" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="3" Visibility="Collapsed"/>
-        <TextBlock Name="Question3" Grid.Column="1" Grid.Row="4" Visibility="Collapsed"/>
-        <TextBox Name="Answer3" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="4" Visibility="Collapsed"/>
-        <TextBlock Name="Question4" Grid.Column="1" Grid.Row="5" Visibility="Collapsed"/>
-        <TextBox Name="Answer4" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="5" Visibility="Collapsed"/>
-        <TextBlock Name="Question5" Grid.Column="1" Grid.Row="6" Visibility="Collapsed"/>
-        <CheckBox Name="Answer5" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="6" Visibility="Collapsed"/>
-        <Button Name="Done" Content="Done" Grid.Column="4" Grid.Row="8" Width="60" Click="Done_Click"/>
+        <TextBlock Name="Question1" Grid.Column="1" Grid.Row="2" Visibility="Visible"/>
+        <TextBox Name="Answer1" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="2" Visibility="Visible"/>
+        <TextBlock Name="Question2" Grid.Column="1" Grid.Row="3" Visibility="Visible"/>
+        <PasswordBox Name="Answer2" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="3" Visibility="Visible"/>
+        <TextBlock Name="Question3" Grid.Column="1" Grid.Row="4" Visibility="Visible"/>
+        <TextBox Name="Answer3" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="4" Visibility="Visible"/>
+        <TextBlock Name="Question4" Grid.Column="1" Grid.Row="5" Visibility="Visible"/>
+        <TextBox Name="Answer4" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="5" Visibility="Visible"/>
+        <TextBlock Name="Question5" Grid.Column="1" Grid.Row="6" Visibility="Visible"/>
+        <CheckBox Name="Answer5" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="6" Visibility="Visible"/>
+        <TextBlock Name="Question6" Grid.Column="1" Grid.Row="7" Visibility="Visible"/>
+        <TextBox Name="Answer6" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="7" Visibility="Visible"/>
+        <TextBlock Name="Question7" Grid.Column="1" Grid.Row="8" Visibility="Visible"/>
+        <TextBox Name="Answer7" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="8" Visibility="Visible"/>
+        <TextBlock Name="Question8" Grid.Column="1" Grid.Row="9" Visibility="Visible"/>
+        <CheckBox Name="Answer8" Margin="0,5,0,0" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="9" Visibility="Visible"/>
+        <Button Name="Done" Content="Done" Grid.Column="4" Grid.Row="11" Width="60" Click="Done_Click"/>
     </Grid>
 </Window>

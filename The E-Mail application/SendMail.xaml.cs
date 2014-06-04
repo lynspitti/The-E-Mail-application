@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace The_E_Mail_application
 {
     /// <summary>
-    /// Interaction logic for SendMail.xaml
+    /// Send a E-mail
     /// </summary>
     public partial class SendMail : Window
     {
-        MainWindow Main_Window;
+        private MainWindow Main_Window;
         public SendMail(MainWindow Main_window,string SelectedClient)
         {
             Main_Window = Main_window;
@@ -31,7 +31,7 @@ namespace The_E_Mail_application
             foreach (MailClient client in Main_Window.ClientPanel.Children)
             {
                 ComboBoxItem Newclient = new ComboBoxItem();
-                Newclient.Content = client.Client_Mail;
+                Newclient.Content = client.User.Header.ToString();
                 if (client.HeadUser.SelectedItem != null)
                 {
                     Newclient.IsSelected = true;
@@ -40,8 +40,14 @@ namespace The_E_Mail_application
             }
         }
 
+        #region Ui functions
+        /// <summary>
+        /// Send button Clicked
+        /// send mail with selected client
+        /// </summary>
         private void Send_Click(object sender, RoutedEventArgs e)
         {
+            #region Non valid send informations handlers
             if (Senders.SelectedItem == null) {
                 MessageBox.Show("Please select a Sender client","Missing sender");
             }
@@ -52,10 +58,11 @@ namespace The_E_Mail_application
             {
                 MessageBox.Show("Please give a valid receiving mail", "Invalid");
             }
+            #endregion
             else {
                 foreach (MailClient client in Main_Window.ClientPanel.Children)
                 {
-                    if (client.Client_Mail == ((ComboBoxItem)Senders.SelectedItem).Content)
+                    if (client.User.Header.ToString() == ((ComboBoxItem)Senders.SelectedItem).Content.ToString())
                     {
                         client.sendEmail(Receiver.Text, Subject.Text,Message.Text);
                         this.Close();
@@ -63,5 +70,6 @@ namespace The_E_Mail_application
                 }
             }
         }
+        #endregion
     }
 }

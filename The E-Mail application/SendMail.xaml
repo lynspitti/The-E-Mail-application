@@ -1,7 +1,7 @@
 ﻿<Window x:Class="The_E_Mail_application.SendMail"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SendMail" Height="300" Width="350" Loaded="Window_Loaded">
+        Title="SendMail" Height="300" Width="350" Loaded="Window_Loaded" Icon="Lynspitti.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>

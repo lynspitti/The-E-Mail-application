@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
+    <Compile Include="Symmetric_Encryption.cs" />
     <Page Include="Objects\MailItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
